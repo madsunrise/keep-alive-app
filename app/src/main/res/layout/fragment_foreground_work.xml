@@ -9,29 +9,28 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/send_ping_now"
+        <TextView
+            android:id="@+id/current_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="196dp"
-            android:text="Send ping now" />
+            android:layout_marginTop="196dp" />
 
         <Button
-            android:id="@+id/foreground_worker_settings"
+            android:id="@+id/schedule_long_running_worker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:text="Foreground worker settings" />
+            android:text="Schedule long-running worker" />
 
         <Button
-            android:id="@+id/periodic_work_settings"
+            android:id="@+id/cancel_worker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:text="Periodic work settings" />
+            android:text="Cancel worker" />
 
     </LinearLayout>
 </ScrollView>

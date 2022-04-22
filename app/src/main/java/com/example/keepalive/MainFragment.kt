@@ -1,5 +1,6 @@
 package com.example.keepalive
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,19 +12,27 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.keepalive.databinding.FragmentMainBinding
 import com.example.keepalive.repository.Repository
 import com.example.keepalive.repository.RepositoryImpl
+import com.example.keepalive.utils.Extensions.toast
 import com.example.keepalive.workmanager.LongRunningWorker
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates.notNull
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     private val binding: FragmentMainBinding by viewBinding(FragmentMainBinding::bind)
-
     private val repository: Repository = RepositoryImpl()
+    private var host: Host by notNull()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        host = context as Host
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.sendPingNow.setOnClickListener { sendPlainPing() }
-        binding.launchLongRunningWorker.setOnClickListener { launchLongRunningWorker() }
+        binding.foregroundWorkerSettings.setOnClickListener { host.openForegroundWorkSettings() }
+        binding.periodicWorkSettings.setOnClickListener { host.openPeriodicWorkSettings() }
     }
 
     private fun sendPlainPing() {
@@ -41,24 +50,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     }
 
-    private fun launchLongRunningWorker() {
-        val request = OneTimeWorkRequest.Builder(LongRunningWorker::class.java)
-            .setInputData(
-                workDataOf(
-                    LongRunningWorker.KEY_USER_ID to App.USER_ID,
-                    LongRunningWorker.KEY_LONG_POLLING_TIMEOUT to LONG_POLLING_TIMEOUT
-                )
-            )
-            .build()
-        WorkManager.getInstance(requireContext()).enqueue(request)
-    }
-
-    private fun toast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
-    }
-
     companion object {
         private const val TAG = "MainFragment"
-        private const val LONG_POLLING_TIMEOUT = 60L
     }
 }

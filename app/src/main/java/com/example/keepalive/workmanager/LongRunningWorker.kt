@@ -20,6 +20,9 @@ import kotlinx.coroutines.delay
 import kotlin.properties.Delegates.notNull
 import kotlin.random.Random
 
+/**
+ * Uses long-polling requests inside infinite loop
+ */
 class LongRunningWorker(context: Context, parameters: WorkerParameters) :
     CoroutineWorker(context, parameters) {
 
@@ -50,7 +53,7 @@ class LongRunningWorker(context: Context, parameters: WorkerParameters) :
 
     private suspend fun startPolling(userId: Long, timeoutInSeconds: Long) {
         while (!isStopped) {
-            val text = "long running worker, request #${++totalRequests}"
+            val text = "long-polling worker, request #${++totalRequests}"
             val requestStartTime = SystemClock.elapsedRealtime()
             try {
                 repository.sendLongPollingPing(userId, text, timeoutInSeconds)
@@ -127,6 +130,6 @@ class LongRunningWorker(context: Context, parameters: WorkerParameters) :
         const val KEY_USER_ID = "KEY_USER_ID"
         const val KEY_LONG_POLLING_TIMEOUT = "KEY_LONG_POLLING_TIMEOUT"
         private const val CHANNEL_ID = "channel_id"
-        private const val TAG = "LongRunningWorker"
+        const val TAG = "LongRunningWorker"
     }
 }
