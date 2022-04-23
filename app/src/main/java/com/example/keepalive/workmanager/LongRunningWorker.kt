@@ -53,7 +53,7 @@ class LongRunningWorker(context: Context, parameters: WorkerParameters) :
 
     private suspend fun startPolling(userId: Long, timeoutInSeconds: Long) {
         while (!isStopped) {
-            val text = "long-polling worker, request #${++totalRequests}"
+            val text = "long-polling request #${++totalRequests}"
             val requestStartTime = SystemClock.elapsedRealtime()
             try {
                 repository.sendLongPollingPing(userId, text, timeoutInSeconds)
