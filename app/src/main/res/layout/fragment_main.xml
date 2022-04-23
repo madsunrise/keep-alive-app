@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="196dp"
-            android:text="Send ping now" />
+            android:text="Send test ping" />
 
         <Button
             android:id="@+id/foreground_worker_settings"
