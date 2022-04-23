@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.work.*
+import androidx.lifecycle.lifecycleScope
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.keepalive.App
 import com.example.keepalive.R
 import com.example.keepalive.databinding.FragmentForegroundWorkBinding
+import com.example.keepalive.storage.TelegramIdStorage
 import com.example.keepalive.workmanager.LongRunningWorker
+import kotlinx.coroutines.launch
 
 class ForegroundWorkFragment : Fragment(R.layout.fragment_foreground_work) {
 
@@ -42,21 +47,24 @@ class ForegroundWorkFragment : Fragment(R.layout.fragment_foreground_work) {
     }
 
     private fun schedule() {
-        val request = OneTimeWorkRequest.Builder(LongRunningWorker::class.java)
-            .setInputData(
-                workDataOf(
-                    LongRunningWorker.KEY_USER_ID to App.USER_ID,
-                    LongRunningWorker.KEY_LONG_POLLING_TIMEOUT to LONG_POLLING_TIMEOUT
+        lifecycleScope.launch {
+            val userId = TelegramIdStorage(requireContext()).getUserId()
+            val request = OneTimeWorkRequest.Builder(LongRunningWorker::class.java)
+                .setInputData(
+                    workDataOf(
+                        LongRunningWorker.KEY_USER_ID to userId,
+                        LongRunningWorker.KEY_LONG_POLLING_TIMEOUT to LONG_POLLING_TIMEOUT
+                    )
                 )
+                .addTag(LongRunningWorker.TAG)
+                .build()
+            WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+                LongRunningWorker.TAG,
+                ExistingWorkPolicy.KEEP,
+                request
             )
-            .addTag(LongRunningWorker.TAG)
-            .build()
-        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
-            LongRunningWorker.TAG,
-            ExistingWorkPolicy.KEEP,
-            request
-        )
-        Log.i(LOG_TAG, "Foreground work has been started")
+            Log.i(LOG_TAG, "Foreground work has been scheduled")
+        }
     }
 
     private fun cancel() {

@@ -8,8 +8,4 @@ class App: Application() {
         super.onCreate()
         Api.ApiImpl.init()
     }
-
-    companion object {
-        const val USER_ID = 225893185L
-    }
 }

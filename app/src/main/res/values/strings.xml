@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KeepAlive</string>
+    <string name="telegram_id_hint">Find your Telegram ID by &lt;a href=\"https://t.me/userinfobot\">userinfobot&lt;/a></string>
 </resources>

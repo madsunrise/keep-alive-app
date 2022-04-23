@@ -4,13 +4,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.work.*
+import androidx.lifecycle.lifecycleScope
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.keepalive.App
 import com.example.keepalive.R
 import com.example.keepalive.databinding.FragmentPeriodicWorkBinding
+import com.example.keepalive.storage.TelegramIdStorage
 import com.example.keepalive.workmanager.LongRunningWorker
 import com.example.keepalive.workmanager.PlainWorker
+import kotlinx.coroutines.launch
 import java.time.Duration
 
 class PeriodicWorkFragment : Fragment(R.layout.fragment_periodic_work) {
@@ -44,20 +49,23 @@ class PeriodicWorkFragment : Fragment(R.layout.fragment_periodic_work) {
     }
 
     private fun schedule() {
-        val request = PeriodicWorkRequestBuilder<PlainWorker>(PERIOD)
-            .addTag(PlainWorker.TAG)
-            .setInputData(
-                workDataOf(
-                    LongRunningWorker.KEY_USER_ID to App.USER_ID
+        lifecycleScope.launch {
+            val userId = TelegramIdStorage(requireContext()).getUserId()
+            val request = PeriodicWorkRequestBuilder<PlainWorker>(PERIOD)
+                .addTag(PlainWorker.TAG)
+                .setInputData(
+                    workDataOf(
+                        LongRunningWorker.KEY_USER_ID to userId
+                    )
                 )
+                .build()
+            WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+                PlainWorker.TAG,
+                ExistingPeriodicWorkPolicy.KEEP,
+                request
             )
-            .build()
-        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-            PlainWorker.TAG,
-            ExistingPeriodicWorkPolicy.KEEP,
-            request
-        )
-        Log.i(LOG_TAG, "Periodic work has been scheduled")
+            Log.i(LOG_TAG, "Periodic work has been scheduled")
+        }
     }
 
     private fun cancel() {
