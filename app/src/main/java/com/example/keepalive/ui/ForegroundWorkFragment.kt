@@ -1,4 +1,4 @@
-package com.example.keepalive
+package com.example.keepalive.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -6,25 +6,25 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.work.*
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.keepalive.databinding.FragmentPeriodicWorkBinding
+import com.example.keepalive.App
+import com.example.keepalive.R
+import com.example.keepalive.databinding.FragmentForegroundWorkBinding
 import com.example.keepalive.workmanager.LongRunningWorker
-import com.example.keepalive.workmanager.PlainWorker
-import java.time.Duration
 
-class PeriodicWorkFragment : Fragment(R.layout.fragment_periodic_work) {
+class ForegroundWorkFragment : Fragment(R.layout.fragment_foreground_work) {
 
-    private val binding: FragmentPeriodicWorkBinding by viewBinding(FragmentPeriodicWorkBinding::bind)
+    private val binding: FragmentForegroundWorkBinding by viewBinding(FragmentForegroundWorkBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeStatus()
-        binding.schedulePeriodicWork.setOnClickListener { schedule() }
-        binding.cancelPeriodicWork.setOnClickListener { cancel() }
+        binding.scheduleLongRunningWorker.setOnClickListener { schedule() }
+        binding.cancelWorker.setOnClickListener { cancel() }
     }
 
     private fun observeStatus() {
         val wm = WorkManager.getInstance(requireContext())
-        wm.getWorkInfosByTagLiveData(PlainWorker.TAG).observe(viewLifecycleOwner) { infoList ->
+        wm.getWorkInfosByTagLiveData(LongRunningWorker.TAG).observe(viewLifecycleOwner) { infoList ->
             Log.i(LOG_TAG, "Updated status: ${infoList.joinToString { it.state.name }}")
             val text = when {
                 infoList.isEmpty() -> "Current status will be displayed here"
@@ -37,34 +37,35 @@ class PeriodicWorkFragment : Fragment(R.layout.fragment_periodic_work) {
                     sb.toString().trim()
                 }
             }
-           binding.currentStatus.text = text
+            binding.currentStatus.text = text
         }
     }
 
     private fun schedule() {
-        val request = PeriodicWorkRequestBuilder<PlainWorker>(PERIOD)
-            .addTag(PlainWorker.TAG)
+        val request = OneTimeWorkRequest.Builder(LongRunningWorker::class.java)
             .setInputData(
                 workDataOf(
-                    LongRunningWorker.KEY_USER_ID to App.USER_ID
+                    LongRunningWorker.KEY_USER_ID to App.USER_ID,
+                    LongRunningWorker.KEY_LONG_POLLING_TIMEOUT to LONG_POLLING_TIMEOUT
                 )
             )
+            .addTag(LongRunningWorker.TAG)
             .build()
-        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-            PlainWorker.TAG,
-            ExistingPeriodicWorkPolicy.KEEP,
+        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+            LongRunningWorker.TAG,
+            ExistingWorkPolicy.KEEP,
             request
         )
-        Log.i(LOG_TAG, "Periodic work has been scheduled")
+        Log.i(LOG_TAG, "Foreground work has been started")
     }
 
     private fun cancel() {
-        WorkManager.getInstance(requireContext()).cancelAllWorkByTag(PlainWorker.TAG)
+        WorkManager.getInstance(requireContext()).cancelAllWorkByTag(LongRunningWorker.TAG)
         Log.i(LOG_TAG, "All works have been cancelled")
     }
 
     companion object {
-        private val PERIOD = Duration.ofMinutes(15L)
-        private const val LOG_TAG = "PeriodicWorkFragment"
+        private const val LOG_TAG = "ForegroundWorkFragment"
+        private const val LONG_POLLING_TIMEOUT = 60L
     }
 }

@@ -1,4 +1,4 @@
-package com.example.keepalive
+package com.example.keepalive.ui
 
 interface Host {
     fun openForegroundWorkSettings()

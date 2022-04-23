@@ -1,8 +1,9 @@
-package com.example.keepalive
+package com.example.keepalive.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.keepalive.R
 import com.example.keepalive.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), Host {

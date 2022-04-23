@@ -1,19 +1,19 @@
-package com.example.keepalive
+package com.example.keepalive.ui
 
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.work.*
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.keepalive.App
+import com.example.keepalive.R
 import com.example.keepalive.databinding.FragmentMainBinding
 import com.example.keepalive.repository.Repository
 import com.example.keepalive.repository.RepositoryImpl
 import com.example.keepalive.utils.Extensions.toast
-import com.example.keepalive.workmanager.LongRunningWorker
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates.notNull
 
