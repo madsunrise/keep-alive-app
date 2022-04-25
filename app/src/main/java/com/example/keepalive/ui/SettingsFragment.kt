@@ -24,8 +24,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.hint.apply {
+        binding.hintUserinfobot.apply {
             text = stringToSpannable(getString(R.string.telegram_id_hint))
+            movementMethod = LinkMovementMethod()
+        }
+        binding.hintKeepAliveBot.apply {
+            text = stringToSpannable(getString(R.string.keep_alive_bot_hint))
             movementMethod = LinkMovementMethod()
         }
         observeStatus()

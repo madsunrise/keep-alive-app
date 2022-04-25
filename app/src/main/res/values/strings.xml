@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">KeepAlive</string>
     <string name="telegram_id_hint">Find your Telegram ID by &lt;a href=\"https://t.me/userinfobot\">userinfobot&lt;/a></string>
+    <string name="keep_alive_bot_hint">Don\'t forget to start &lt;a href=\"https://t.me/mobile_keep_alive_bot\">Keep Alive bot&lt;/a></string>
 </resources>

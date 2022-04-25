@@ -18,7 +18,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/hint"
+            android:id="@+id/hint_userinfobot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -64,5 +64,13 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
             android:text="Go back to main screen" />
+
+        <TextView
+            android:id="@+id/hint_keep_alive_bot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:textSize="16sp" />
     </LinearLayout>
 </ScrollView>
