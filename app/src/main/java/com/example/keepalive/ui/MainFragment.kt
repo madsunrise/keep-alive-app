@@ -1,6 +1,7 @@
 package com.example.keepalive.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -15,6 +16,7 @@ import com.example.keepalive.R
 import com.example.keepalive.databinding.FragmentMainBinding
 import com.example.keepalive.repository.Repository
 import com.example.keepalive.repository.RepositoryImpl
+import com.example.keepalive.service.BackgroundService
 import com.example.keepalive.storage.TelegramIdStorage
 import com.example.keepalive.utils.Extensions.toast
 import kotlinx.coroutines.launch
@@ -42,6 +44,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding.sendPingNow.setOnClickListener { sendPlainPing() }
         binding.foregroundWorkerSettings.setOnClickListener { openForegroundWorkerSettings() }
         binding.periodicWorkSettings.setOnClickListener { openPeriodicWorkSettings() }
+        binding.startService.setOnClickListener { startBackgroundService() }
     }
 
     private fun sendPlainPing() {
@@ -78,6 +81,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
             host.openPeriodicWorkSettings()
         }
+    }
+
+    private fun startBackgroundService() {
+        val intent = Intent(requireContext(), BackgroundService::class.java)
+        requireActivity().startService(intent)
     }
 
     private suspend fun validateUserId(): Boolean {

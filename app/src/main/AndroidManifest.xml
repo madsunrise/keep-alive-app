@@ -35,6 +35,10 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_config" />
         </service>
+
+        <service
+            android:name=".service.BackgroundService"
+            android:exported="false" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
