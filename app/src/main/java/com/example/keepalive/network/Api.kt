@@ -1,11 +1,8 @@
 package com.example.keepalive.network
 
-import android.content.Context
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -31,7 +28,7 @@ interface Api {
                 throw IllegalStateException("Api is already initialized")
             }
             retrofit = Retrofit.Builder()
-                .baseUrl("http://95.217.190.229:8080/keep-alive-bot/")
+                .baseUrl("http://65.108.85.92:8080/keep-alive-bot/")
                 .client(createOkHttpClient())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(MoshiConverterFactory.create())
