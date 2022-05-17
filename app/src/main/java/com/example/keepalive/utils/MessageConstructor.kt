@@ -4,6 +4,6 @@ import android.os.Build
 
 object MessageConstructor {
     fun createMessage(text: String): String {
-        return "${Build.MODEL} (${Build.VERSION.RELEASE}): $text"
+        return "${Build.MANUFACTURER} ${Build.MODEL} (${Build.VERSION.RELEASE}): $text"
     }
 }
