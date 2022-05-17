@@ -2,7 +2,12 @@ package com.example.keepalive.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -21,6 +26,7 @@ import com.example.keepalive.storage.TelegramIdStorage
 import com.example.keepalive.utils.Extensions.toast
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates.notNull
+
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -84,6 +90,17 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun startBackgroundService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val packageName = requireContext().packageName
+            val pm = requireContext().getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                val intent = Intent()
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.flags = FLAG_ACTIVITY_NEW_TASK
+                intent.data = Uri.parse("package:$packageName")
+                requireContext().startActivity(intent)
+            }
+        }
         val intent = Intent(requireContext(), BackgroundService::class.java)
         requireActivity().startService(intent)
     }
