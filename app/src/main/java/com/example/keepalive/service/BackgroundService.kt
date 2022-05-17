@@ -37,7 +37,8 @@ class BackgroundService : Service() {
 
         override fun run() {
             while (!isInterrupted) {
-                val text = "Request from service #${++totalRequests}"
+                val text =
+                    "Request from service #${++totalRequests}, failed requests: $failedRequests"
                 val requestStartTime = SystemClock.elapsedRealtime()
                 try {
                     runBlocking { repository.sendLongPollingPing(userId, text, TIMEOUT_SEC) }
