@@ -42,7 +42,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycleScope.launch { validateUserId() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,9 +55,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun sendPlainPing() {
         lifecycleScope.launch {
             try {
-                if (!validateUserId()) {
-                    return@launch
-                }
                 repository.sendPlainPing(
                     TelegramIdStorage(requireContext()).getUserId(),
                     "ping by button click"
@@ -73,18 +69,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun openForegroundWorkerSettings() {
         lifecycleScope.launch {
-            if (!validateUserId()) {
-                return@launch
-            }
             host.openForegroundWorkSettings()
         }
     }
 
     private fun openPeriodicWorkSettings() {
         lifecycleScope.launch {
-            if (!validateUserId()) {
-                return@launch
-            }
             host.openPeriodicWorkSettings()
         }
     }
