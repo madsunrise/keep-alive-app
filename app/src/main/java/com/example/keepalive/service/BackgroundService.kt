@@ -59,7 +59,7 @@ class BackgroundService : Service() {
         }
 
         companion object {
-            private const val TIMEOUT_SEC = 30L
+            private const val TIMEOUT_SEC = 60L
         }
     }
 
