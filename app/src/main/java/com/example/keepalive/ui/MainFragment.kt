@@ -93,6 +93,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
         val intent = Intent(requireContext(), BackgroundService::class.java)
         requireActivity().startService(intent)
+        toast("Background service has started")
     }
 
     private suspend fun validateUserId(): Boolean {
